@@ -22,37 +22,37 @@ local default_config = {
 		'man',
 		'TelescopePrompt',
 		'TelescopeResults',
-	}
+	},
 }
 local winhighlight = {
 	default = {
 		CursorLine = 'CursorLine',
-		CursorLineNr = 'CursorLineNr',
+		LineNr = 'LineNr',
 		CursorLineSign = 'CursorLineSign',
 		CursorLineFold = 'CursorLineFold',
 		Visual = 'Visual',
 	},
 	copy = {
 		CursorLine = 'ModesCopyCursorLine',
-		CursorLineNr = 'ModesCopyCursorLineNr',
+		LineNr = 'ModesCopyLineNr',
 		CursorLineSign = 'ModesCopyCursorLineSign',
 		CursorLineFold = 'ModesCopyCursorLineFold',
 	},
 	insert = {
 		CursorLine = 'ModesInsertCursorLine',
-		CursorLineNr = 'ModesInsertCursorLineNr',
+		LineNr = 'ModesInsertLineNr',
 		CursorLineSign = 'ModesInsertCursorLineSign',
 		CursorLineFold = 'ModesInsertCursorLineFold',
 	},
 	delete = {
 		CursorLine = 'ModesDeleteCursorLine',
-		CursorLineNr = 'ModesDeleteCursorLineNr',
+		LineNr = 'ModesDeleteLineNr',
 		CursorLineSign = 'ModesDeleteCursorLineSign',
 		CursorLineFold = 'ModesDeleteCursorLineFold',
 	},
 	visual = {
 		CursorLine = 'ModesVisualCursorLine',
-		CursorLineNr = 'ModesVisualCursorLineNr',
+		LineNr = 'ModesVisualLineNr',
 		CursorLineSign = 'ModesVisualCursorLineSign',
 		CursorLineFold = 'ModesVisualCursorLineFold',
 		Visual = 'ModesVisualVisual',
@@ -96,7 +96,7 @@ M.highlight = function(scene)
 	end
 
 	if not config.set_number then
-		winhl_map.CursorLineNr = nil
+		winhl_map.LineNr = nil
 	end
 
 	local new_value = {}
@@ -154,15 +154,19 @@ M.define = function()
 	vim.cmd('hi ModesDelete guibg=' .. colors.delete)
 	vim.cmd('hi ModesInsert guibg=' .. colors.insert)
 	vim.cmd('hi ModesVisual guibg=' .. colors.visual)
+	vim.cmd.highlight('LineNr', 'guifg=#418fef') -- TODO: Use config value blue
 
 	for _, mode in ipairs({ 'Copy', 'Delete', 'Insert', 'Visual' }) do
 		local def = { bg = blended_colors[mode:lower()] }
+		local linedef = { bg = colors[mode:lower()] }
 		utils.set_hl(('Modes%sCursorLine'):format(mode), def)
-		utils.set_hl(('Modes%sCursorLineNr'):format(mode), def)
+		utils.set_hl(('Modes%sLineNr'):format(mode), linedef)
 		utils.set_hl(('Modes%sCursorLineSign'):format(mode), def)
 		utils.set_hl(('Modes%sCursorLineFold'):format(mode), def)
 	end
 
+	vim.cmd.highlight('LineNrAbove', 'guifg=#5f6672') -- TODO: Use config value gray
+	vim.cmd.highlight('LineNrBelow', 'guifg=#5f6672') -- TODO: Use config value gray
 	utils.set_hl('ModesInsertModeMsg', { fg = colors.insert })
 	utils.set_hl('ModesVisualModeMsg', { fg = colors.visual })
 	utils.set_hl('ModesVisualVisual', { bg = blended_colors.visual })
@@ -201,7 +205,7 @@ M.disable_managed_ui = function()
 end
 
 M.setup = function(opts)
-	opts = vim.tbl_extend("keep", opts or {}, default_config)
+	opts = vim.tbl_extend('keep', opts or {}, default_config)
 	if opts.focus_only then
 		print(
 			'modes.nvim – `focus_only` has been removed and is now the default behaviour'
