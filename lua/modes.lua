@@ -158,7 +158,7 @@ M.define = function()
 
 	for _, mode in ipairs({ 'Copy', 'Delete', 'Insert', 'Visual' }) do
 		local def = { bg = blended_colors[mode:lower()] }
-		local linedef = { bg = colors[mode:lower()] }
+		local linedef = { fg = colors[mode:lower()] }
 		utils.set_hl(('Modes%sCursorLine'):format(mode), def)
 		utils.set_hl(('Modes%sLineNr'):format(mode), linedef)
 		utils.set_hl(('Modes%sCursorLineSign'):format(mode), def)
