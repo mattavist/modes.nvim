@@ -125,6 +125,8 @@ end
 M.define = function()
 	local normal_bg = utils.get_bg('Normal', 'Normal')
 	colors = {
+		normal = config.colors.normal or '#418fef',
+		unselected = config.colors.unselected or '#5f6672',
 		copy = config.colors.copy or utils.get_bg('ModesCopy', '#f5c359'),
 		delete = config.colors.delete or utils.get_bg('ModesDelete', '#c75c6a'),
 		insert = config.colors.insert or utils.get_bg('ModesInsert', '#78ccc5'),
@@ -154,7 +156,7 @@ M.define = function()
 	vim.cmd('hi ModesDelete guibg=' .. colors.delete)
 	vim.cmd('hi ModesInsert guibg=' .. colors.insert)
 	vim.cmd('hi ModesVisual guibg=' .. colors.visual)
-	vim.cmd.highlight('LineNr', 'guifg=#418fef') -- TODO: Use config value blue
+	vim.cmd.highlight('LineNr', 'guifg=' .. colors.normal)
 
 	for _, mode in ipairs({ 'Copy', 'Delete', 'Insert', 'Visual' }) do
 		local def = { bg = blended_colors[mode:lower()] }
@@ -165,8 +167,8 @@ M.define = function()
 		utils.set_hl(('Modes%sCursorLineFold'):format(mode), def)
 	end
 
-	vim.cmd.highlight('LineNrAbove', 'guifg=#5f6672') -- TODO: Use config value gray
-	vim.cmd.highlight('LineNrBelow', 'guifg=#5f6672') -- TODO: Use config value gray
+	vim.cmd.highlight('LineNrAbove', 'guifg=' .. colors.unselected)
+	vim.cmd.highlight('LineNrBelow', 'guifg=' .. colors.unselected)
 	utils.set_hl('ModesInsertModeMsg', { fg = colors.insert })
 	utils.set_hl('ModesVisualModeMsg', { fg = colors.visual })
 	utils.set_hl('ModesVisualVisual', { bg = blended_colors.visual })
